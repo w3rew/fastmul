@@ -3,12 +3,26 @@ NPLIB := $(shell python -c'import numpy;print(numpy.get_include())')
 
 DEBUG ?= NO
 ifeq ($(DEBUG), YES)
-DEBUGFLAGS := -g
+DEBUGFLAGS ?= -g
 else
-DEBUGFLAGS := ""
+DEBUGFLAGS ?=
+endif
+
+OPT ?= NO
+ifeq ($(OPT), YES)
+OPTFLAGS ?= -Ofast -march=native
+else
+OPTFLAGS ?=
+endif
+
+THREADING ?= NO
+ifeq ($(THREADING), YES)
+THREADFLAGS ?= -fopenmp
+else 
+THREADFLAGS ?=
 endif
 
 .PHONY: all
 all:
-	clang fastmul.c $(PYLIB) -I$(NPLIB) $(DEBUGFLAGS) -o fastmul.so -fPIC -shared
+	clang fastmul.c $(PYLIB) -I$(NPLIB) $(DEBUGFLAGS) $(OPTFLAGS) $(THREADFLAGS) -o fastmul.so -fPIC -shared
 

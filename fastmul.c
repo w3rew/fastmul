@@ -30,15 +30,14 @@ static int make_mul_f32(PyArrayObject* A, PyArrayObject* B,
 
     uint64_t size = shape[0] * shape[1];
 
+#pragma omp parallel for
     for (uint64_t i = 0; i < size; ++i) {
-        *res_data = inn3_f32(A_data, B_data);
-        ++res_data;
-        *res_data = inn3_f32(A_data, B_data + 3);
-        ++res_data;
-        *res_data = inn3_f32(A_data, B_data + 6);
-        ++res_data;
-        A_data += 3;
+        uint64_t indx = i * 3;
+        res_data[indx] = inn3_f32(A_data + indx, B_data);
+        res_data[indx + 1] = inn3_f32(A_data + indx, B_data + 3);
+        res_data[indx + 2] = inn3_f32(A_data + indx, B_data + 6);
     }
+
 
     return 0;
 }
@@ -60,10 +59,8 @@ static PyObject* dot(PyObject* self, PyObject* args_tuple)
     //printf("shape: %ld %ld %ld\n", shape[0], shape[1], shape[2]);
 
     PyArrayObject *result = PyArray_Empty(3, shape, PyArray_DTYPE(A), false);
-
-    if (make_mul_f32(A, B, result, shape))
+    if(make_mul_f32(A, B, result, shape))
         return NULL;
-
     Py_INCREF(result);
     //Py_DECREF(A);
     //Py_DECREF(B);
