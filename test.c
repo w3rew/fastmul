@@ -7,7 +7,7 @@ static inline float inn3_f32(float* a, float* b)
         return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
-static inline int make_mul(float* a, float* b, float* res, uint64_t size)
+static int make_mul(float* a, float* b, float* res, uint64_t size)
 {
 #pragma omp parallel for
     for (uint64_t i = 0; i < size; ++i) {
@@ -22,11 +22,12 @@ static inline int make_mul(float* a, float* b, float* res, uint64_t size)
 
 int main()
 {
-    float* a = malloc(sizeof(float) * 10000 * 10000 * 3);
+    const uint64_t SZ = 8000 * 8000;
+    float* a = malloc(sizeof(float) * SZ * 3);
     float* b = malloc(sizeof(float) * 3 * 3);
-    float* res = malloc(sizeof(float) * 10000 * 10000 * 3);
+    float* res = malloc(sizeof(float) * SZ * 3);
 
-    make_mul(a, b, res, 10000 * 10000);
+    make_mul(a, b, res, SZ);
 
 
     printf("%f\n", res[0]);
