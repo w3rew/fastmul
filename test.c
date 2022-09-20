@@ -28,13 +28,13 @@ int main()
     float* res = malloc(sizeof(float) * SZ * 3);
 
     make_mul(a, b, res, SZ);
+    printf("%f\n", res[0]);
 
     free(a);
     free(b);
     free(res);
 
 
-    printf("%f\n", res[0]);
 
     return 0;
 }
