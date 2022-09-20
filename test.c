@@ -29,6 +29,10 @@ int main()
 
     make_mul(a, b, res, SZ);
 
+    free(a);
+    free(b);
+    free(res);
+
 
     printf("%f\n", res[0]);
 
