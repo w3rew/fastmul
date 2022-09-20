@@ -10,7 +10,7 @@ class TestMul(unittest.TestCase):
         my = fastmul.dot(A, B)
 
         try:
-            np.testing.assert_almost_equal(gt, my)
+            np.testing.assert_allclose(gt, my, atol = 1e-6, rtol = 1e-6)
         except AssertionError:
             self.fail("Arrays are not close")
 
